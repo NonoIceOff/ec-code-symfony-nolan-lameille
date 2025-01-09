@@ -1,0 +1,76 @@
+{% extends 'auth.html.twig' %}
+
+{% block title %}Log in!
+{% endblock %}
+
+{% block body %}
+	<div class="flex items-center justify-center grow bg-center bg-no-repeat page-bg">
+		<div class="card max-w-[370px] w-full">
+
+			<form action="{{ path('auth_login') }}" class="card-body flex flex-col gap-5 p-10" id="sign_in_form" method="post">
+				{% if error %}
+					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+				{% endif %}
+
+				{% if app.user %}
+					<div class="mb-3">
+						You are logged in as
+						{{ app.user.userIdentifier }},
+						<a href="{{ path('app_logout') }}">Logout</a>
+					</div>
+				{% endif %}
+                
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+				<div class="text-center mb-2.5">
+					<h3 class="text-lg font-medium text-gray-900 leading-none mb-2.5">
+						Connexion
+					</h3>
+					<div class="flex items-center justify-center font-medium">
+						<span class="text-2sm text-gray-700 me-1.5">
+							Pas de compte ?
+						</span>
+						<a class="text-2sm link" href="{{ path('auth_register') }}">
+							Inscription
+						</a>
+					</div>
+				</div>
+				<div class="flex flex-col gap-1">
+					<label for="email" class="form-label font-normal text-gray-900">Email</label>
+					<input id="username" type="email" name="_username" class="form-control" placeholder="Adresse email" value="{{ last_username }}" autocomplete="email" required autofocus/>
+				</div>
+				<div class="flex flex-col gap-1">
+					<div class="flex items-center justify-between gap-1">
+						<label class="form-label font-normal text-gray-900">
+							Mot de passe
+						</label>
+					</div>
+					<div class="input" data-toggle-password="true">
+						<input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" placeholder="Mot de passe" value=""/>
+						<button class="btn btn-icon" data-toggle-password-trigger="true" type="button">
+							<i class="ki-filled ki-eye text-gray-500 toggle-password-active:hidden"></i>
+							<i class="ki-filled ki-eye-slash text-gray-500 hidden toggle-password-active:block"></i>
+						</button>
+					</div>
+				</div>
+				<input
+				type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+				{#
+				            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+				            See https://symfony.com/doc/current/security/remember_me.html
+				
+				            <div class="checkbox mb-3">
+				                <input type="checkbox" name="_remember_me" id="_remember_me">
+				                <label for="_remember_me">Remember me</label>
+				            </div>
+				        #}
+
+				<button class="btn btn-lg btn-primary" type="submit">
+					Sign in
+				</button>
+			</form>
+
+
+		</div>
+	</div>
+{% endblock %}

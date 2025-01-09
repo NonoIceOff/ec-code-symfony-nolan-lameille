@@ -1,0 +1,38 @@
+{% extends 'auth.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	<!-- Page -->
+	{{ error }}
+	<div class="flex items-center justify-center grow bg-center bg-no-repeat page-bg">
+		<div class="card max-w-[370px] w-full">
+			{{ form_errors(registrationForm) }}
+			{{ form_start(registrationForm) }}
+			<div class="text-center mb-2.5">
+				<h3 class="text-lg font-medium text-gray-900 leading-none mb-2.5">
+					Inscription
+				</h3>
+				<div class="flex items-center justify-center">
+					<span class="text-2sm text-gray-700 me-1.5">
+						Vous avez déjà un compte ?
+					</span>
+					<a class="text-2sm link" href="{{ path('auth_login') }}">
+						Me connecter
+					</a>
+				</div>
+			</div>
+
+
+			{{ form_row(registrationForm.email) }}
+			{{ form_row(registrationForm.plainPassword, {
+                        label: 'Password'
+                    }) }}
+			{{ form_row(registrationForm.agreeTerms) }}
+			<button type="submit" class="btn">Inscription</button>
+			{{ form_end(registrationForm) }}
+		</div>
+	</div>
+	<!-- End of Page -->
+{% endblock %}

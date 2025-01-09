@@ -1,0 +1,13 @@
+framework:
+    validation: 
+        enabled: true
+        auto_mapping: 
+            App\Entity\: ~
+
+
+when@test:
+    framework:
+        validation:
+            not_compromised_password: false
+
+
