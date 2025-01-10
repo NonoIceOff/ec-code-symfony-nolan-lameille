@@ -6,7 +6,38 @@
     </div>
     <div class="card-body flex flex-col gap-5">
         <figure>
-            <img src="{{  asset('media/charts/Radar_Sample.png') }}" alt="Radar Sample"/>
+            <div id="radar-chart">
+            </div>
+           
         </figure>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('/radar-data')
+        .then((response) => response.json())
+        .then((data) => {
+            var options = {
+                series: [{
+                    name: 'Livres lus',
+                    data: data.values
+                }],
+                chart: {
+                    height: 400,
+                    type: 'radar'
+                },
+                xaxis: {
+                    categories: data.categories
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#radar-chart"), options);
+            chart.render();
+        })
+        .catch((error) => {
+            console.error('Erreur lors de la récupération des données :', error);
+        });
+});
+
+</script>

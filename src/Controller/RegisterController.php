@@ -38,25 +38,21 @@ class RegisterController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            // encode the plain password
+            // hash the password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-
-
-            // do anything else you need here, like send an email
             return $this->redirectToRoute('auth_login');
 
         }
 
-        // Validation de l'objet User
+        // validation de l'objet User
         $errors = $this->validator->validate($user);
 
-        // Render the 'hello.html.twig' template
         return $this->render('auth/register.html.twig', [
-            'name' => 'Thibaud', // Pass data to the view
+            'name' => 'Thibaud',
             'registrationForm' => $form,
             'error' => $errors,
         ]);

@@ -1,6 +1,5 @@
 <?php
 
-// src/Controller/CommentariesController.php
 namespace App\Controller;
 
 use App\Entity\BookRead;
@@ -12,6 +11,7 @@ use App\Repository\BookReadRepository;
 use App\Repository\CommentariesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository;
+use App\Service\BookReadService;
 
 class CommentariesController extends AbstractController
 {
@@ -19,17 +19,20 @@ class CommentariesController extends AbstractController
     private CommentariesRepository $commentariesRepository;
     private EntityManagerInterface $entityManager;
     private UserRepository $userRepository;
+    private BookReadService $bookReadService;
 
     public function __construct(
         CommentariesRepository $commentariesRepository,
         BookReadRepository $bookReadRepository,
         EntityManagerInterface $entityManager,
-        UserRepository $userRepository // Ajouter le UserRepository ici
+        UserRepository $userRepository,
+        BookReadService $bookReadService,
     ) {
         $this->bookReadRepository = $bookReadRepository;
         $this->commentariesRepository = $commentariesRepository;
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
+        $this->bookReadService = $bookReadService;
     }
 
     #[Route('/commentaries/{bookReadId}', name: 'app_commentaries')]
@@ -45,7 +48,7 @@ class CommentariesController extends AbstractController
         $bookRead = $this->bookReadRepository->find($bookReadId);
 
         if (!$bookRead) {
-            throw $this->createNotFoundException('Le livre n\'existe pas');
+            throw $this->createNotFoundException('The book does not exist');
         }
 
         $commentaries = $this->commentariesRepository->findBy([
@@ -57,13 +60,18 @@ class CommentariesController extends AbstractController
             if ($user) {
                 $commentary->userEmail = $user->getEmail();
             } else {
-                $commentary->userEmail = 'Utilisateur non trouvé';
+                $commentary->userEmail = 'User not found';
             }
         }
 
-        return $this->render('commentaries/index.html.twig', [
+        // get all rated books for searches
+        $allBooksRead = $this->bookReadService->getAllBooksReadWithAverage();
+
+
+        return $this->render('pages/commentaries.html.twig', [
             'controller_name' => 'CommentariesController',
             'bookread' => $bookRead,
+            'allbooksRead' => $allBooksRead,
             'commentaries' => $commentaries,
         ]);
     }
