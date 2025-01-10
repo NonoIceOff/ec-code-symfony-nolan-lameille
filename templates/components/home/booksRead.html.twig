@@ -36,44 +36,39 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {% for bookReaded in booksReaded %}
+                    {% set categoryName = '' %}
+                    {% for category in categories %}
+                        {% if category.id == bookReaded.book.categoryid %}
+                            {% set categoryName = category.name %}
+                        {% endif %}
+                    {% endfor %}
                     <tr>
                         <td>
                             <div class="flex flex-col gap-2">
                                 <a class="leading-none font-medium text-sm text-gray-900 hover:text-primary"
                                    href="#">
-                                    Le Moine qui vendit sa Ferrari
+                                    {{ bookReaded.book.name }}
                                 </a>
                                 <span class="text-2sm text-gray-700 font-normal leading-3">
-                                    Un conte sur la quête du bonheur et du succès intérieur.
+                                    {{ bookReaded.description }}
                                 </span>
                             </div>
                         </td>
-                        <td>Spiritualité</td>
+                        <td>{{ categoryName }}</td>
                         <td>
                             <div class="rating">
-                                <div class="rating-label checked">
-                                    <i class="rating-on ki-solid ki-star text-base leading-none"></i>
-                                    <i class="rating-off ki-outline ki-star text-base leading-none"></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="rating-on ki-solid ki-star text-base leading-none"></i>
-                                    <i class="rating-off ki-outline ki-star text-base leading-none"></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="rating-on ki-solid ki-star text-base leading-none"></i>
-                                    <i class="rating-off ki-outline ki-star text-base leading-none"></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="rating-on ki-solid ki-star text-base leading-none"></i>
-                                    <i class="rating-off ki-outline ki-star text-base leading-none"></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="rating-on ki-solid ki-star text-base leading-none"></i>
-                                    <i class="rating-off ki-outline ki-star text-base leading-none"></i>
-                                </div>
+                                {% set fullStars = bookReaded.rating %}
+                                {% for i in 1..5 %}
+                                    <div class="rating-label {{ i <= fullStars ? 'checked' : '' }}">
+                                        <i class="rating-on ki-solid ki-star text-base leading-none"></i>
+                                        <i class="rating-off ki-outline ki-star text-base leading-none"></i>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </td>
                     </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>

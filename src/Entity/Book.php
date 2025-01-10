@@ -35,6 +35,7 @@ class Book
     #[ORM\Column]
     private ?\DateTime $updated_at = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,4 +124,5 @@ class Book
 
         return $this;
     }
+
 }

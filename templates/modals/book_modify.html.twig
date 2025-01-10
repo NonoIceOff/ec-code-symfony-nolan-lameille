@@ -1,0 +1,22 @@
+<div class="modal" data-modal="true" id="book_modify_modal">
+    <div class="modal-content max-w-[600px] top-[15%]">
+        <div class="modal-header py-4 px-5">
+            <h3 class="modal-title">Modifier ma lecture</h3>
+        </div>
+        <div class="modal-body p-0 pb-5">
+            <div class="scrollable-y-auto" data-scrollable="true" data-scrollable-max-height="auto"
+                 data-scrollable-offset="300px">
+                    {{ form_start(form_modify, { 'attr': { 'id': 'book_modify_form' } }) }}
+                    {{ form_row(form_modify.description) }}
+                    {{ form_row(form_modify.rating) }}
+                    {{ form_row(form_modify.is_read) }}
+                   
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                {{ form_end(form_modify) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

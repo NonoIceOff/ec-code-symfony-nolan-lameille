@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<h1><b>Commentaires de cette notation : {{ bookread.book.name }}</b></h1>
+	<h2>De : {{ bookread.user.email }}</h2>
+
+	{% if bookread.isread == 1 %}
+	    <h2>Lu ? Oui</h2>
+	{% else %}
+	    <h2>Lu ? Non</h2>
+	{% endif %}
+
+	
+    <div class="rating">
+    <h2>Note : </h2>
+        {% set fullStars = bookread.rating %}
+        {% for i in 1..5 %}
+            <div class="rating-label {{ i <= fullStars ? 'checked' : '' }}">
+                <i class="rating-on ki-solid ki-star text-base leading-none"></i>
+                <i class="rating-off ki-outline ki-star text-base leading-none"></i>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% for commentary in commentaries %}
+    <div class="commentary" style="margin-top : 46px;">
+        <h3>Par {{ commentary.userEmail }}</h3>
+        <p><i>{{ commentary.text }}</i></p>
+    </div>
+    {% endfor %}
+
+    <br><br>
+
+    <a id="comment-button" class="btn btn-primary" href="{{ path('app_add_commentary', {'bookReadId': bookread.id}) }}">
+        Commenter
+    </a>
+
+
+
+	{% endblock %}
+

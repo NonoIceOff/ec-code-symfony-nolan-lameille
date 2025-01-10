@@ -17,6 +17,10 @@ class BookRead
     #[ORM\Column]
     private ?int $user_id = null;
 
+    #[ORM\ManyToOne(targetEntity: Book::class)]
+    #[ORM\JoinColumn(name: "book_id", referencedColumnName: "id", nullable: false)] 
+    private ?Book $book = null;
+
     #[ORM\Column(type: Types::BIGINT)]
     private ?string $book_id = null;
 
@@ -38,22 +42,8 @@ class BookRead
     #[ORM\Column]
     private ?\DateTime $updated_at = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): static
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
+    #[ORM\ManyToOne(inversedBy: 'bookReads')]
+    private ?User $User = null;
 
     public function getBookId(): ?string
     {
@@ -63,6 +53,24 @@ class BookRead
     public function setBookId(string $book_id): static
     {
         $this->book_id = $book_id;
+
+        return $this;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(Book $book): static
+    {
+        $this->book = $book;
 
         return $this;
     }
@@ -96,12 +104,13 @@ class BookRead
         return $this->is_read;
     }
 
-    public function setRead(bool $is_read): static
+    public function setRead(bool $isRead): static
     {
-        $this->is_read = $is_read;
+        $this->is_read = $isRead;
 
         return $this;
     }
+
 
     public function getCover(): ?string
     {
@@ -135,6 +144,24 @@ class BookRead
     public function setUpdatedAt(\DateTime $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime(); 
+        $this->updated_at = new \DateTime(); 
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): static
+    {
+        $this->User = $User;
 
         return $this;
     }
