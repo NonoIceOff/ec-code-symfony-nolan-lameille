@@ -42,14 +42,41 @@ class HomeController extends AbstractController
         $booksReaded = $this->bookReadRepository->findByUserId($userId, true);
 
         $categories = $this->categoryRepository->findAll();
-        
+
+        // Logique pour regrouper les lectures par livre et calculer les moyennes
+        $allBooksReadRaw = $this->bookReadRepository->findAll();
+        $allBooksRead = [];
+
+        foreach ($allBooksReadRaw as $bookRead) {
+            $bookId = $bookRead->getBook()->getId();
+            $bookName = $bookRead->getBook()->getName();
+            $bookDescription = $bookRead->getBook()->getDescription();
+            $rating = $bookRead->getRating();
+
+            if (!isset($allBooksRead[$bookId])) {
+                $allBooksRead[$bookId] = [
+                    'book_id' => $bookId,
+                    'book_name' => $bookName,
+                    'book_description' => $bookDescription,
+                    'total_rating' => 0,
+                    'rating_count' => 0,
+                    'average_rating' => 0,
+                ];
+            }
+
+            $allBooksRead[$bookId]['total_rating'] += $rating;
+            $allBooksRead[$bookId]['rating_count']++;
+            $allBooksRead[$bookId]['average_rating'] = $allBooksRead[$bookId]['total_rating'] / $allBooksRead[$bookId]['rating_count'];
+        }
+
+        // Transformer en tableau indexé pour Twig
+        $allBooksRead = array_values($allBooksRead);
 
         // Formulaire d'ajout
         $newBookRead = new BookRead();
         $form = $this->createForm(BookReadType::class, $newBookRead);
         $form->handleRequest($request);
 
-        // validation formulaire d'ajout de bouquins
         if ($form->isSubmitted() && $form->isValid()) {
             $book = $form->get('book')->getData();
             $description = $form->get('description')->getData();
@@ -63,21 +90,10 @@ class HomeController extends AbstractController
             $newBookRead->setRating($rating);
             $newBookRead->setUpdatedAt(new \DateTime());
 
-
             $this->entityManager->persist($newBookRead);
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app.home');
-        }
-
-        
-        
-
-        
-
-        if (count($booksReading) == 0) {
-            $modifyForm = $this->createForm(BookReadModifyType::class, $newBookRead);
-            $modifyForm->handleRequest($request);
         }
 
         // Formulaire de modification
@@ -94,12 +110,12 @@ class HomeController extends AbstractController
 
                 return $this->redirectToRoute('app.home');
             }
-
         }
 
         return $this->render('pages/home.html.twig', [
             'booksReading' => $booksReading,
             'booksReaded' => $booksReaded,
+            'allbooksRead' => $allBooksRead,
             "categories" => $categories,
             'name' => 'Accueil',
             'form' => $form->createView(),
